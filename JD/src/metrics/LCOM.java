@@ -34,13 +34,13 @@ public class LCOM {
 		List<MethodObject> methods = classObject.getMethodList();
 		int p = 0;
 		int q = 0;
-		
 		if(methods.size() < 2) {
 			return -1;
 		}
 		
 		for(int i=0; i<methods.size()-1; i++) {
 			MethodObject mI = methods.get(i);
+		
 			List<FieldInstructionObject> attributesI = mI.getFieldInstructions();
 			for(int j=i+1; j<methods.size(); j++) {
 				MethodObject mJ = methods.get(j);
