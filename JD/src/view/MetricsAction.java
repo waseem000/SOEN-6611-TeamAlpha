@@ -118,7 +118,12 @@ public class MetricsAction  implements IObjectActionDelegate {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						
+						try {
+							AHF ahf = new AHF(system);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						if(selectedPackageFragmentRoot != null) {
 							// package fragment root selected
 						}
