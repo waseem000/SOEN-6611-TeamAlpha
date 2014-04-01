@@ -65,32 +65,32 @@ public class AHF {
 		System.out.println("number of classes tested ="+classes_tested +"out of "+ total_number_of_classes);
 		print("number of classes tested ="+classes_tested +"out of "+ total_number_of_classes);
 
-		System.out.println("public methods ="+public_attribute+" of "+number_of_attributes);
-		System.out.println("private_methods ="+private_attribute+" of "+number_of_attributes);
-		System.out.println("protected_methods methods ="+protected_attribute+" of "+number_of_attributes);
-		System.out.println("default_methods methods ="+default_attribute+" of "+number_of_attributes);
+		System.out.println("public attributes ="+public_attribute+" of "+number_of_attributes);
+		System.out.println("private attributes  ="+private_attribute+" of "+number_of_attributes);
+		System.out.println("protected attributes  ="+protected_attribute+" of "+number_of_attributes);
+		System.out.println("default attributes ="+default_attribute+" of "+number_of_attributes);
 
 		System.out.println("V(Mmi) ="+Attribute_visibility);
 		print("V(Mmi) ="+Attribute_visibility);
 
-		Double temp_MHF =Math.abs(Calculate_MHF(Attribute_visibility,attribute_tested));
-		AHF=((temp_MHF/100)*100);
+		Double temp_AHF =Math.abs(Calculate_AHF(Attribute_visibility,attribute_tested));
+		AHF=((temp_AHF/100)*100);
 		AHF=1-(AHF);
 		AHF =Double.parseDouble(new DecimalFormat("##.###").format(AHF));
-		System.out.println("->>>>>>MHF ="+AHF+"%");
-		print("->>>>>>MHF ="+AHF+"%");
+		System.out.println("->>>>>>AHF ="+AHF+"%");
+		print("->>>>>>AHF ="+AHF+"%");
 		csv_print(AHF.toString());
 		output.close();
 
 	}
 
-	private Double Calculate_MHF(Double methods_visibility, Integer numbner_of_methods_class) {
+	private Double Calculate_AHF(Double attribute_visibility, Integer numbner_of_attribute_class) {
 		// TODO Auto-generated method stub
-		Double method_hiding_factor;
+		Double attribute_hiding_factor;
 
 
-		method_hiding_factor=(double) ((1-methods_visibility)/numbner_of_methods_class);
-		return method_hiding_factor;
+		attribute_hiding_factor=(double) ((1-attribute_visibility)/numbner_of_attribute_class);
+		return attribute_hiding_factor;
 	}
 
 	private double  Attribute_Check(ClassObject classObj) 
@@ -102,8 +102,9 @@ public class AHF {
 		Integer _default=0;
 		Integer temp=0;
 		double visible=0;
+		
 		List<FieldObject> attributes = classObj.getFieldList();
-
+		
 		for (int i = 0; i < attributes.size(); i++) 
 		{
 
@@ -150,7 +151,7 @@ public class AHF {
 		String package_name= name_class.replaceFirst(temp, "");		
 		Integer classes_package=0;
 		System.out.println("Package name-->"+package_name);
-		System.out.println("method in class -->"+class_file.toString());
+		System.out.println("attribute in class -->"+class_file.toString());
 
 		for(ClassObject cls : system_classes)
 		{
