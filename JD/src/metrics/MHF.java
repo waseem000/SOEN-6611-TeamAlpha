@@ -3,21 +3,12 @@ package metrics;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.jdt.core.IClassFile;
-import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.internal.core.PackageFragment;
-import org.eclipse.jdt.internal.core.PackageFragmentRoot;
 
 import ast.Access;
 import ast.ClassObject;
-import ast.MethodInvocationObject;
 import ast.MethodObject;
 import ast.SystemObject;
 import ast.TypeObject;
@@ -45,7 +36,6 @@ public class MHF {
 	
 		total_number_of_classes = (double) system.getClassNumber();
 		system_classes=classes;
-		//Double methods_visibility; 
 		Double visibility_for_all_classes = 0.0;
 		int number_of_class=1;
 		Integer number_of_methods=0;
@@ -69,17 +59,10 @@ public class MHF {
 			}
 
 		}
-		//System.out.println("visible_for_all_classes = "+visibility_for_all_classes);
-
-		/*for(ClassObject classObject : classes)
-		{
-			number_of_methods=number_of_methods+classObject.getMethodList().size();
-
-		}*/
+		
 		System.out.println("number of methods ="+number_of_methods);
-		print("number of methods ="+number_of_methods);
-		System.out.println("number of methods tested ="+methods_tested);
-		print("number of methods ="+methods_tested);
+		System.out.println("number of methods tested ="+methods_tested+"out of "+ number_of_methods);
+		print("number of methods tested ="+methods_tested+"out of "+ number_of_methods);
 		System.out.println("number of classes tested ="+classes_tested +"out of "+ total_number_of_classes);
 		print("number of classes tested ="+classes_tested +"out of "+ total_number_of_classes);
 		
@@ -90,7 +73,6 @@ public class MHF {
 		
 		System.out.println("V(Mmi) ="+visibility_for_all_classes);
 		print("V(Mmi) ="+visibility_for_all_classes);
-		//visibility_for_all_classes=visibility_for_all_classes/classes_tested;
 		Double temp_MHF =Math.abs(Calculate_MHF(visibility_for_all_classes,methods_tested));
 		MHF=((temp_MHF/100)*100);
 		MHF=1-(MHF);
@@ -103,9 +85,8 @@ public class MHF {
 	}
 
 	private Double Calculate_MHF(Double methods_visibility, Integer numbner_of_methods_class) {
-		// TODO Auto-generated method stub
+	
 		Double method_hiding_factor;
-
 
 		method_hiding_factor=(double) ((1-methods_visibility)/numbner_of_methods_class);
 		return method_hiding_factor;
@@ -121,10 +102,9 @@ public class MHF {
 		Integer temp=0;
 		double visible=0;
 		List<MethodObject> methods = classObj.getMethodList();
-
+		
 		for (int i = 0; i < methods.size(); i++) 
 		{
-
 			temp= isVisible(methods.get(i));
 			if(temp ==1)
 			{
@@ -183,19 +163,6 @@ public class MHF {
 		return classes_package;
 	}
 
-	/*private double Method_Visibility(MethodObject methodObject,ClassObject classObj) {
-		// TODO Auto-generated method stub
-		MethodInvocationObject methodsinv = methodObject.generateMethodInvocation();
-		Integer num=0;
-		if (systemobj.containsMethodInvocation(methodsinv, classObj))
-		{
-			num++;
-			//return 1;
-		}
-
-		return num;
-	}*/
-
 	private Integer Inheritance_Visibilty( ClassObject classObj) {
 
 
@@ -214,7 +181,7 @@ public class MHF {
 			}
 			else
 			{
-				while(superClassObject/*.getSuperclass()*/ != null)
+				while(superClassObject != null)
 				{
 					superclasses=superclasses+1;
 
@@ -226,10 +193,6 @@ public class MHF {
 					superClassType = superClass.getClassType();
 					superClassObject = systemobj.getClassObject(superClassType);
 
-					/*if(superClassObject==null)
-					{
-						break;
-					}*/
 				}
 			}
 		}
@@ -246,67 +209,34 @@ public class MHF {
 
 	private Integer isVisible(MethodObject methodObj) {
 
-		MethodDeclaration signature;
-		Access access = methodObj.getAccess();
-		signature=methodObj.getMethodDeclaration();
-		int modifier =signature.getModifiers();
-		List modifiers_list= signature.modifiers();
-		List modifiers_sublist=modifiers_list.subList(0, modifiers_list.size());
+		Access access_type = methodObj.getAccess();
+		String method_modifier= access_type.toString();
 
-		String method_modifier;
 
-		if(modifiers_sublist.size()==0) // if their is no modifier it is considered public
+		if(	method_modifier.equals("public")) //public modifier =9
 		{
+			System.out.println("public");
+			methods_tested ++;
+			return 1;
+		}
+		else if(method_modifier.equals("private"))//private modifier =10
+		{
+			System.out.println("private");
+			methods_tested++;
+			return 0;
+		}
+		else if(method_modifier.equals("protected")) // the default modifier which allow access to package 
+		{
+			System.out.println("protected");
+			methods_tested++;
+			return 3;
+		}
+		else 
+		{
+			System.out.println("defult,"+method_modifier);
 			methods_tested++;
 			return 4;
 		}
-		else
-		{
-			for(int i=0; i<modifiers_sublist.size(); i++)
-			{
-				method_modifier=modifiers_sublist.get(i).toString();
-
-
-				if(	method_modifier.equals("public")) //public modifier =9
-				{
-					System.out.println("public");
-					methods_tested++;
-					return 1;
-				}
-				else if(method_modifier.equals("private"))//private modifier =10
-				{
-					System.out.println("private");
-					methods_tested++;
-					return 0;
-				}
-				else if(method_modifier.equals("protected")) // the default modifier which allow access to package 
-				{
-					System.out.println("protected");
-					methods_tested++;
-					return 3;//1;
-				}
-				else if(!(method_modifier.startsWith("@"))&&!(method_modifier.equals("final")||method_modifier.equals("abstract")||method_modifier.equals("static")||method_modifier.equals("synchronized"))) // the default modifier which allow access to package 
-				{
-					System.out.println("defult,"+method_modifier);
-					methods_tested++;
-					return 4;
-				}
-				if((method_modifier.equals("final")||method_modifier.equals("abstract")||method_modifier.equals("static")||method_modifier.equals("synchronized"))&& (modifiers_sublist.size()==1 || i==modifiers_sublist.size()-1))
-				{
-					System.out.println("defult,"+method_modifier);
-					methods_tested++;
-					return 4;
-				}
-				if(method_modifier.startsWith("@") && i==modifiers_sublist.size()-1)
-				{
-					methods_tested++;
-					System.out.println("defult,"+method_modifier);
-					return 4;
-				}
-			}
-		}
-		System.out.println(methodObj.getClassName()+"  -error outside the loop");
-		return -1; //anything that is not modifier
 
 
 	}
