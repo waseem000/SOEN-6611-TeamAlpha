@@ -1,4 +1,5 @@
 package metrics;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,13 +19,14 @@ import ast.FieldObject;
 
 public class Coupling { // class start here !!
 private Map<String, Integer> CouplingMap; // create Map for CouplingFactorMap.
+private ToFile output = new ToFile("Coupling","CF","1") ;
 
 public Coupling(SystemObject system) 
 { // Constructor start here !!
 	CouplingMap = new HashMap<String, Integer>();	
 	Set<ClassObject> classes = system.getClassObjects();
 	double computeCoupling =0;
-	double CouplingFactor;
+	Double CouplingFactor;
 	List<String> classesNames = system.getClassNames();
 	double TotalNumberOfclasses = system.getClassNumber();
 	for(ClassObject classObject : classes) 
@@ -36,7 +38,18 @@ public Coupling(SystemObject system)
 	CouplingFactor = computeCoupling/(Math.pow(TotalNumberOfclasses,2.0)-TotalNumberOfclasses);
 	CouplingFactor =Double.parseDouble(new DecimalFormat("##.###").format(CouplingFactor));
 	System.out.println(""+CouplingFactor);
-	
+	csv_print(CouplingFactor.toString());
+	try {
+		output.close();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+
+private void csv_print(String text)
+{
+	output.CSVFile_print(text);
 }
  
 private int Attributes_Check(ClassObject classObject) 
