@@ -1,4 +1,5 @@
 package metrics;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -29,29 +30,39 @@ public Coupling(SystemObject system)
 	for(ClassObject classObject : classes) 
 	   {
 		//Attributes_Check(classObject);
-		computeCoupling += Methods_Check(classObject, classesNames);
+		computeCoupling += Methods_Check(classObject, classesNames)+ Attributes_Check(classObject);
 	
 	   }
 	CouplingFactor = computeCoupling/(Math.pow(TotalNumberOfclasses,2.0)-TotalNumberOfclasses);
+	CouplingFactor =Double.parseDouble(new DecimalFormat("##.###").format(CouplingFactor));
 	System.out.println(""+CouplingFactor);
 	
 }
- /*
-private void Attributes_Check(ClassObject classObject) {
+ 
+private int Attributes_Check(ClassObject classObject) 
+{
+	int CountingVariable=0;
+	List<String> classesNames = new ArrayList<String>();
+	classesNames.add(classObject.getName());
 	List<MethodObject> methods= classObject.getMethodList();
-	for(int i=0; i<methods.size()-1; i++) 
+	for(int i=0; i<methods.size(); i++) 
 	{
 		MethodObject mI = methods.get(i);
-		mI.containsSuperFieldAccess()
 		List<FieldInstructionObject> attributesI= mI.getFieldInstructions();
 		for(int j=0;j<attributesI.size();j++)
 		{
 			FieldInstructionObject attributeI = attributesI.get(j);
-		System.out.println("The class name is: "+classObject.getName()+" :attribute is  "+);
+			if (classObject.getName()!= attributeI.getOwnerClass())
+			{
+				CountingVariable+=1;
+				classesNames.add(attributeI.getOwnerClass());
+			}
+			
 		}
 	}
+	return CountingVariable;
 }
-*/
+
 
 private int Methods_Check(ClassObject classObject, List<String> systemClassesNames) 
 {
