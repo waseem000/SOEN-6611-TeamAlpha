@@ -1,4 +1,6 @@
 package metrics;
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,41 +19,63 @@ import ast.FieldObject;
 
 public class Coupling { // class start here !!
 private Map<String, Integer> CouplingMap; // create Map for CouplingFactorMap.
+private ToFile output = new ToFile("Coupling","CF","1") ;
 
 public Coupling(SystemObject system) 
 { // Constructor start here !!
 	CouplingMap = new HashMap<String, Integer>();	
 	Set<ClassObject> classes = system.getClassObjects();
 	double computeCoupling =0;
-	double CouplingFactor;
+	Double CouplingFactor;
 	List<String> classesNames = system.getClassNames();
 	double TotalNumberOfclasses = system.getClassNumber();
 	for(ClassObject classObject : classes) 
 	   {
 		//Attributes_Check(classObject);
-		computeCoupling += Methods_Check(classObject, classesNames);
+		computeCoupling += Methods_Check(classObject, classesNames)+ Attributes_Check(classObject);
 	
 	   }
 	CouplingFactor = computeCoupling/(Math.pow(TotalNumberOfclasses,2.0)-TotalNumberOfclasses);
+	CouplingFactor =Double.parseDouble(new DecimalFormat("##.###").format(CouplingFactor));
 	System.out.println(""+CouplingFactor);
-	
+	csv_print(CouplingFactor.toString());
+	try {
+		output.close();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 }
- /*
-private void Attributes_Check(ClassObject classObject) {
+
+private void csv_print(String text)
+{
+	output.CSVFile_print(text);
+}
+ 
+private int Attributes_Check(ClassObject classObject) 
+{
+	int CountingVariable=0;
+	List<String> classesNames = new ArrayList<String>();
+	classesNames.add(classObject.getName());
 	List<MethodObject> methods= classObject.getMethodList();
-	for(int i=0; i<methods.size()-1; i++) 
+	for(int i=0; i<methods.size(); i++) 
 	{
 		MethodObject mI = methods.get(i);
-		mI.containsSuperFieldAccess()
 		List<FieldInstructionObject> attributesI= mI.getFieldInstructions();
 		for(int j=0;j<attributesI.size();j++)
 		{
 			FieldInstructionObject attributeI = attributesI.get(j);
-		System.out.println("The class name is: "+classObject.getName()+" :attribute is  "+);
+			if (classObject.getName()!= attributeI.getOwnerClass())
+			{
+				CountingVariable+=1;
+				classesNames.add(attributeI.getOwnerClass());
+			}
+			
 		}
 	}
+	return CountingVariable;
 }
-*/
+
 
 private int Methods_Check(ClassObject classObject, List<String> systemClassesNames) 
 {
