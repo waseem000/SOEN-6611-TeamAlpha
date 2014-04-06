@@ -3,6 +3,7 @@ package metrics;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Scanner;
 
 import com.csvreader.CsvWriter;
 
@@ -19,8 +20,11 @@ public   class ToFile {
 	
 	public ToFile(String file_name, String metrics_name, String prog_version) 
 	{
-		version=prog_version;
-		Text_file= new File("Calculations_files//"+file_name+".txt");
+		System.out.println("Enter the version number...");
+		Scanner input = new Scanner(System.in);
+		String Version=input.next();
+		version=Version;//prog_version;
+		Text_file= new File("Calculations_files//"+file_name+version+".txt");
 		CSV_file=new File("Calculations_files//"+file_name+".csv");
 		alreadyExists = CSV_file.exists();
 		try {
@@ -56,6 +60,7 @@ public   class ToFile {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 	
 	public void TextFile_print(String output) throws IOException
@@ -63,7 +68,6 @@ public   class ToFile {
 
 		writer.write(output);
 		writer.	write(System.getProperty("line.separator"));
-		//	writer.close();
 		writer.flush();
 
 	}
@@ -83,6 +87,7 @@ public   class ToFile {
 
 	public void close()throws IOException
 	{
+//		input.close();
 		writer.close();
 		csv_writer.close();
 	}
