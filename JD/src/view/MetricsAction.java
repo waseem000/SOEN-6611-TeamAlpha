@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import metrics.AHF;
+import metrics.Coupling;
 import metrics.LCOM;
 import metrics.MHF;
+import metrics.Polymorphism;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -112,6 +114,8 @@ public class MetricsAction  implements IObjectActionDelegate {
 						SystemObject system = ASTReader.getSystemObject();
 						LCOM lcom = new LCOM(system);
 						System.out.print(lcom.toString());
+						Coupling coupling = new Coupling(system);
+						Polymorphism polymorphism =new Polymorphism(system);
 						try {
 							MHF mhf = new MHF(system);
 						} catch (IOException e) {

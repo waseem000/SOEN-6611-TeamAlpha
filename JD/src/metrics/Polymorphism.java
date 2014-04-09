@@ -1,5 +1,6 @@
 package metrics;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +20,7 @@ public class Polymorphism {
 	
 	private Map<String, Integer> PolymorphismMap;
 	private InheritanceDetection DescendedClasses;
+	private ToFile output = new ToFile("Polymorphism","Polymorphism", "5") ;
 	public Polymorphism(SystemObject system) 
 	{
 		PolymorphismMap = new HashMap<String, Integer>();
@@ -28,34 +30,27 @@ public class Polymorphism {
 		double NumberOfNewMethods=0;
 		DescendedClasses = new InheritanceDetection(system);
 		double DC = 0;
-		Double polymorphism = 0;
+		Double polymorphism = 0.0;
 		
 		
 		
 		for(ClassObject classObject : classes) 
 		{
 			NumberOfOverRidingMethods+=CheckOverridingMethods(classObject);
-			NumberOfNewMethods += CheckONewMethods(classObject);
+			//NumberOfNewMethods += CheckONewMethods(classObject);
 			NumberOfNewMethods += classObject.getNumberOfMethods() - NumberOfOverRidingMethods;
-			NumberOfDescendedClasses (classObject);
 			DC += CheckDescendedClasses(classObject);
-			
-			
-
 		}
 		// here we should write the formula for Polymorphism Factor.
-		polymorphism = ((NumberOfNewMethods * NumberOfOverRidingMethods) / (NumberOfNewMethods * DC));
-		System.out.println(polymorphism);
-		
-		
-	}
-
-	private void NumberOfDescendedClasses(ClassObject classObject) {
-		
-		InheritanceTree Tree = DescendedClasses.getTree(classObject.getName());
-		
-		// TODO Auto-generated method stub
-		
+		polymorphism = ((NumberOfOverRidingMethods) / (NumberOfNewMethods * DC));
+		System.out.println("polymorphism->>>>>>"+polymorphism);
+		csv_print(polymorphism.toString());
+		try {
+			output.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private double CheckOverridingMethods(ClassObject classObject) 
@@ -109,5 +104,10 @@ public class Polymorphism {
 			 numberOfChildern=rootclass.getChildCount();
 		}
 		return numberOfChildern;
+	}
+	
+	private void csv_print(String text)
+	{
+		output.CSVFile_print(text);
 	}
 }
