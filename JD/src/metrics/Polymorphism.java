@@ -28,6 +28,7 @@ public class Polymorphism {
 		Set<ClassObject> classes = system.getClassObjects();
 		double NumberOfOverRidingMethods=0;
 		double NumberOfNewMethods=0;
+		double Denominator =0 ; 
 		DescendedClasses = new InheritanceDetection(system);
 		double DC = 0;
 		Double polymorphism = 0.0;
@@ -36,13 +37,17 @@ public class Polymorphism {
 		
 		for(ClassObject classObject : classes) 
 		{
-			NumberOfOverRidingMethods+=CheckOverridingMethods(classObject);
-			//NumberOfNewMethods += CheckONewMethods(classObject);
-			NumberOfNewMethods += classObject.getNumberOfMethods() - NumberOfOverRidingMethods;
-			DC += CheckDescendedClasses(classObject);
+			if ( classObject.getSuperclass() != null)
+			{
+				NumberOfOverRidingMethods+=CheckOverridingMethods(classObject);
+				//NumberOfNewMethods += CheckONewMethods(classObject);
+				NumberOfNewMethods = classObject.getNumberOfMethods() - NumberOfOverRidingMethods;
+				DC = CheckDescendedClasses(classObject);
+				Denominator += (NumberOfNewMethods * DC) ;
+			}
 		}
 		// here we should write the formula for Polymorphism Factor.
-		polymorphism = ((NumberOfOverRidingMethods) / (NumberOfNewMethods * DC));
+		polymorphism = ((NumberOfOverRidingMethods) / Denominator);
 		System.out.println("polymorphism->>>>>>"+polymorphism);
 		csv_print(polymorphism.toString());
 		try {
