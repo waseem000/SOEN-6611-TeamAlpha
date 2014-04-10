@@ -17,13 +17,15 @@ import ast.TypeObject;
 
 public class MIF {
 	
+	private ToFile output = new ToFile("Method Inheritance Factor","MIF","1") ;
 	double totalMI = 0 ;
 	double totalMA =0;
+	Double MIF;
 	public  MIF(SystemObject system)
 	{
 		 Set<ClassObject> classes = system.getClassObjects();
-		 InheritanceDetection inheritanceDetection = new InheritanceDetection(system);
-		 for (ClassObject classObject : classes) {
+		 for (ClassObject classObject : classes) 
+		 {
 			 ClassObject superClass = system.getClassObject(classObject.getSuperclass().getClassType());
 			 if( superClass != null)
 			 {
@@ -39,20 +41,31 @@ public class MIF {
 				  double Mi = numberOfOverridableMethods- CheckOverridingMethods(classObject);
 				  totalMI += Mi;
 				  totalMA += classObject.getMethodList().size()- numberOfOverridableMethods + Mi;
-				  
-				 
-				 
 			 }
 		}
+		  MIF= totalMI/totalMA;
+		 MIF =Double.parseDouble(new DecimalFormat("##.###").format(MIF));
+		  System.out.println("the value of MIF->>>>>>"+MIF);
+		  String Convertor= MIF.toString();
+		  csv_print(Convertor);
+			try {
+				output.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		 
 	}
+	private void csv_print(String text)
+	{
+		output.CSVFile_print(text);
+	}
 	
-	private int CheckOverridingMethods(ClassObject classObject) 
+	private double CheckOverridingMethods(ClassObject classObject) 
 	{
 		
 		List<MethodObject> methods = classObject.getMethodList();
         double countingOverridings=0;
-        double countingNewmethods=0;
 
 		for(int i=0; i<methods.size(); i++)
 		{
