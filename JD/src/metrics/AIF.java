@@ -45,8 +45,8 @@ public class AIF {
 		  AIF= totalAI/totalAA;
 		  AIF =Double.parseDouble(new DecimalFormat("##.###").format(AIF));
 		  System.out.println("the value of AIF->>>>>>"+AIF);
-		  String Convertor= AIF.toString();
-		  csv_print(Convertor);
+		 
+		  csv_print( AIF.toString());
 			try {
 				output.close();
 			} catch (IOException e) {

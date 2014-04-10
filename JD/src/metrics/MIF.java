@@ -46,8 +46,7 @@ public class MIF {
 		  MIF= totalMI/totalMA;
 		 MIF =Double.parseDouble(new DecimalFormat("##.###").format(MIF));
 		  System.out.println("the value of MIF->>>>>>"+MIF);
-		  String Convertor= MIF.toString();
-		  csv_print(Convertor);
+		  csv_print(MIF.toString());
 			try {
 				output.close();
 			} catch (IOException e) {
