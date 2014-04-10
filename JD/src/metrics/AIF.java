@@ -25,21 +25,27 @@ public class AIF {
 		 Set<ClassObject> classes = system.getClassObjects();
 		 for (ClassObject classObject : classes) 
 		 {
-			 ClassObject superClass = system.getClassObject(classObject.getSuperclass().getClassType());
-			 if( superClass != null)
+			 TypeObject superClass_temp =  classObject.getSuperclass();
+			 if(superClass_temp!=null)
 			 {
-				 List<FieldObject> fields = superClass.getFieldList();
-				 for (FieldObject field : fields)
+				 ClassObject superClass = system.getClassObject(classObject.getSuperclass().getClassType());
+				 if( superClass != null)
 				 {
-					 if(field.isStatic())
-						 fields.remove(field);
-					 if(field.getVariableDeclaration().toString().contains("final"))
-						 fields.remove(field);
+					 List<FieldObject> fields = superClass.getFieldList();
+					 for (int i=0; i<fields.size();i++)
+					 {
+						 FieldObject field = fields.get(i);
+					 
+						 if(field.isStatic())
+							 fields.remove(field);
+						 if(field.getVariableDeclaration().toString().contains("final"))
+							 fields.remove(field);
+					 }
+					 double numberOfOverridableFields =  fields.size();
+					  double Ai = numberOfOverridableFields- CheckOverridingAttributes(classObject,fields);
+					  totalAI += Ai;
+					  totalAA += classObject.getMethodList().size()- numberOfOverridableFields + Ai;
 				 }
-				 double numberOfOverridableFields =  fields.size();
-				  double Ai = numberOfOverridableFields- CheckOverridingAttributes(classObject,fields);
-				  totalAI += Ai;
-				  totalAA += classObject.getMethodList().size()- numberOfOverridableFields + Ai;
 			 }
 		}
 		  AIF= totalAI/totalAA;

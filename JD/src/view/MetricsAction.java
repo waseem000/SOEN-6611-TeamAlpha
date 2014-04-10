@@ -116,11 +116,11 @@ public class MetricsAction  implements IObjectActionDelegate {
 						SystemObject system = ASTReader.getSystemObject();
 						// LCOM lcom = new LCOM(system);
 						// System.out.print(lcom.toString());
-						//Coupling coupling = new Coupling(system);
-						// Polymorphism polymorphism =new Polymorphism(system);
+						Coupling coupling = new Coupling(system);
+						 Polymorphism polymorphism =new Polymorphism(system);
 						MIF mif = new MIF(system);
 						AIF aif = new AIF(system);
-						/*try {
+						try {
 							MHF mhf = new MHF(system);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
@@ -132,7 +132,7 @@ public class MetricsAction  implements IObjectActionDelegate {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						*/
+						
 						if(selectedPackageFragmentRoot != null) {
 							// package fragment root selected
 						}

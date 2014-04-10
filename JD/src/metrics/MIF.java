@@ -26,21 +26,26 @@ public class MIF {
 		 Set<ClassObject> classes = system.getClassObjects();
 		 for (ClassObject classObject : classes) 
 		 {
-			 ClassObject superClass = system.getClassObject(classObject.getSuperclass().getClassType());
-			 if( superClass != null)
+			 TypeObject superClass_temp =  classObject.getSuperclass();
+			 if(superClass_temp!=null)
 			 {
-				 List<MethodObject> methods = superClass.getMethodList();
-				 for (MethodObject method : methods)
+				 ClassObject superClass = system.getClassObject(classObject.getSuperclass().getClassType());
+				 if( superClass != null)
 				 {
-					 if(method.isStatic())
-						 methods.remove(method);
-					 if(method.getSignature().contains("final"))
-						 methods.remove(method);
+					 List<MethodObject> methods = superClass.getMethodList();
+					 for (int i=0; i<methods.size();i++)
+					 {
+						 MethodObject method = methods.get(i);
+						 if(method.isStatic())
+							 methods.remove(method);
+						 if(method.getSignature().contains("final"))
+							 methods.remove(method);
+					 }
+					 double numberOfOverridableMethods =  methods.size();
+					 double Mi = numberOfOverridableMethods- CheckOverridingMethods(classObject);
+					 totalMI += Mi;
+					 totalMA += classObject.getMethodList().size()- numberOfOverridableMethods + Mi;
 				 }
-				 double numberOfOverridableMethods =  methods.size();
-				  double Mi = numberOfOverridableMethods- CheckOverridingMethods(classObject);
-				  totalMI += Mi;
-				  totalMA += classObject.getMethodList().size()- numberOfOverridableMethods + Mi;
 			 }
 		}
 		  MIF= totalMI/totalMA;
